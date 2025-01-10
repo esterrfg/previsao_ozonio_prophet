@@ -51,16 +51,17 @@ if st.session_state.previsao_feita:
     st.plotly_chart(fig)
 
 previsao = st.session_state.dados_previsao
-tabela_previsao = previsao[['ds', 'yhat']].tail(dias)
-tabela_previsao.columns = ['Data (dia/mês/ano)', 'Previsão de O3 (μg/m3)']
-tabela_previsao['Data (dia/mês/ano)'] = pd.to_datetime(tabela_previsao['Data (dia/mês/ano)']).dt.strftime('%d/%m/%Y')
-tabela_previsao['Previsão de O3 (μg/m3)'] = tabela_previsao['Previsão de O3 (μg/m3)'].round(2)
-tabela_previsao.reset_index(drop=True, inplace=True)
-st.write('Tabela contendo as previsões de O3 para os próximos', dias, 'dias.'.format(dias))
-st.dataframe(tabela_previsao,height=300)
+if previsao is not None:
+    tabela_previsao = previsao[['ds', 'yhat']].tail(dias)
+    tabela_previsao.columns = ['Data (dia/mês/ano)', 'Previsão de O3 (μg/m3)']
+    tabela_previsao['Data (dia/mês/ano)'] = pd.to_datetime(tabela_previsao['Data (dia/mês/ano)']).dt.strftime('%d/%m/%Y')
+    tabela_previsao['Previsão de O3 (μg/m3)'] = tabela_previsao['Previsão de O3 (μg/m3)'].round(2)
+    tabela_previsao.reset_index(drop=True, inplace=True)
+    st.write('Tabela contendo as previsões de O3 para os próximos', dias, 'dias.'.format(dias))
+    st.dataframe(tabela_previsao,height=300)
 
-csv = tabela_previsao.to_csv(index=False)
-st.download_button(label='Baixar Tabela de Previsão de O3 como .csv', data=csv, file_name='previsao_o3.csv', mime='text/csv')
+    csv = tabela_previsao.to_csv(index=False)
+    st.download_button(label='Baixar Tabela de Previsão de O3 como .csv', data=csv, file_name='previsao_o3.csv', mime='text/csv')
 
 
 
